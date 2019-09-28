@@ -1,4 +1,5 @@
 import sys
+from Node import Node
 from Tree import ImportTree, PrintTable, Lookup, InsertPrefix, DeletePrefix, CompressTree
 from IOFunctions import checkPrefix, read
 
@@ -6,8 +7,10 @@ from IOFunctions import checkPrefix, read
 #tree=ImportTree(sys.argv[1])
 try:
 	tree = ImportTree("inputfile.txt")
-except:
+except Exception as e:
+	print(e)
 	print("There was an error opening the file. Starting with a blank table...")
+	tree = Node(None)
 
 while(1):
 	print("\n")
