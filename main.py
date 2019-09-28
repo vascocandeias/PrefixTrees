@@ -1,9 +1,13 @@
 import sys
-from Tree import (ImportTree, PrintTable, Lookup, InsertPrefix, DeletePrefix, CompressTree)
- 
+from Tree import ImportTree, PrintTable, Lookup, InsertPrefix, DeletePrefix, CompressTree
+from IOFunctions import checkPrefix, read
+
+
 #tree=ImportTree(sys.argv[1])
-tree=ImportTree("inputfile.txt")
-print("Sofia & Vasco - ADRC")
+try:
+	tree = ImportTree("inputfile.txt")
+except:
+	print("There was an error opening the file. Starting with a blank table...")
 
 while(1):
 	print("\n")
@@ -13,29 +17,46 @@ while(1):
 	print("\t2) Insert entry")
 	print("\t3) Delete entry")
 	print("\t4) Compress table")
-	print("\t5) Quit")
-	val = int(input("\n> "))
+	print("\t5) Print tree")
+	print("\t6) Quit")
+	val = int(read("\n> "))
 	print("\n")
+	
 	if val is 0:
 		print("Prefix Table")
 		PrintTable(tree, "")
+		
 	elif val is 1:
-		prefix = input("Prefix: ")
+		prefix = read("Prefix: ")
+		if not checkPrefix(prefix):
+			continue
 		nexthop = Lookup(tree,prefix)
 		if nexthop is not None:
 			print("Next hop: " + nexthop)
 		else:
 			print("Packet dropped")
+			
 	elif val is 2:
-		prefix = input("Prefix: ")
-		nexthop = input("Next hop: ")
-		InsertPrefix(tree, prefix, nexthop)
+		prefix = read("Prefix: ")
+		if not checkPrefix(prefix):
+			continue
+		nexthop = read("Next hop: ")
+		tree = InsertPrefix(tree, prefix, nexthop)
+		
 	elif val is 3:
-		prefix = input("Prefix: ")
-		DeletePrefix(tree, prefix)
+		prefix = read("Prefix: ")
+		if not checkPrefix(prefix):
+			continue
+		tree = DeletePrefix(tree, prefix)
+		
 	elif val is 4:
-		CompressTree()
+		CompressTree(tree)
+		
 	elif val is 5:
+		tree.display()
+		
+	elif val is 6:
 		break
+
 	else:
 		print("Try again")
