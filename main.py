@@ -1,6 +1,6 @@
 import sys
 from Node import Node
-from Tree import ImportTree, PrintTable, Lookup, InsertPrefix, DeletePrefix, CompressTree
+from Tree import ImportTree, PrintTable, Lookup, InsertPrefix, DeletePrefix, CompressTree, OptimalCompression
 from IOFunctions import checkPrefix, read
 
 
@@ -20,8 +20,9 @@ while(1):
 	print("\t2) Insert entry")
 	print("\t3) Delete entry")
 	print("\t4) Compress table")
-	print("\t5) Print tree")
-	print("\t6) Quit")
+	print("\t5) Compress ORTC")
+	print("\t6) Print tree")
+	print("\t7) Quit")
 	val = int(read("\n> "))
 	print("\n")
 	
@@ -55,10 +56,13 @@ while(1):
 	elif val is 4:
 		CompressTree(tree)
 		
-	elif val is 5:
-		tree.display()
-		
 	elif val is 6:
+		tree.display()
+	
+	elif val is 5:
+		tree = OptimalCompression(tree)
+
+	elif val is 7:
 		break
 
 	else:

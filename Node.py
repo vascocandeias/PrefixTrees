@@ -29,7 +29,44 @@ class Node:
 		self.nexthop = None
 		while node is not None and node.nexthop is None and all(x is None for x in node.child):
 			node = node.removeNode()
-		
+
+
+	def recursiveORTC(self, nexthop):
+		if self.nexthop is None:
+			self.nexthop = nexthop
+		else:
+			self.nexthop = [self.nexthop]
+
+		for i in range(2):
+			if self.child[i] is None and self.child[not i] is not None:
+				self.child[i] = Node(self)
+			if self.child[i] is not None:
+				self.child[i].recursiveORTC(self.nexthop)
+
+		if self.child[0] is None:
+			return
+
+		intersect = self.intersection()
+		if intersect:
+			self.nexthop = intersect
+		else:
+			self.nexthop = self.child[0].nexthop + self.child[1].nexthop
+
+	def intersection(self): 
+		return list(set(self.child[0].nexthop) & set(self.child[1].nexthop)) 
+
+	def step3(self, nexthop):
+		if self.prev is not None and nexthop in self.nexthop:
+			self.deletePath()
+		else:
+			self.nexthop = self.nexthop[0]
+			nexthop = self.nexthop
+
+		for i in range(2):
+			if self.child[i] is not None:
+				self.child[i].step3(nexthop)
+
+
 	def display(self):
 		lines, _, _, _ = self._display_aux()
 		for line in lines:

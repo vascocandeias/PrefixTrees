@@ -63,7 +63,6 @@ def DeletePrefix(tree, prefix):
 	return tree
 
 def CompressTree(tree):
-	#TODO: is the compression optimal or is it the table?
 	if tree is not None:
 		recursiveCompression(tree, None)
 	return tree
@@ -83,3 +82,9 @@ def recursiveCompression(node, nexthop):
 	for i in range(2):
 		if node.child[i] is not None:
 			recursiveCompression(node.child[i], nexthop)
+
+def OptimalCompression(tree):
+	tree.recursiveORTC([tree.nexthop])
+	tree.nexthop = tree.nexthop[0]
+	tree.step3(tree.nexthop)
+	return tree
