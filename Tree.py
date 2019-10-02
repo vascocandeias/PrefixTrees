@@ -9,7 +9,6 @@ def ImportTree(filename):
 	return tree
 
 def PrintTable(node, path):
-	#TODO verificar se pode ser esta a ordem de apresentação 
 	if node.nexthop is not None:
 		if path is "":
 			print("e " + node.nexthop)
