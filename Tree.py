@@ -1,22 +1,17 @@
 from Node import Node
  
-def ImportTree(filename):
+def PrefixTree(filename):
 	f = open(filename)
 	lines = f.read().splitlines()
 	tree = Node(None)
 	for x in lines:
 		InsertPrefix(tree, *x.split())
+	f.close()
 	return tree
 
-def PrintTable(node, path):
-	if node.nexthop is not None:
-		if path is "":
-			print("e " + node.nexthop)
-		else:
-			print(path + " " + node.nexthop)
-	for i in range(2):
-		if node.child[i] is not None:
-			PrintTable(node.child[i], path+str(i))
+def PrintTable(tree):
+	while queue
+	tree.print("")
 	
 def Lookup(tree, prefix):
 	prefix = prefix.lstrip("e")
@@ -24,11 +19,12 @@ def Lookup(tree, prefix):
 	node = tree
 
 	for c in prefix:
-		if node.child[int(c)] is None:
+		aux = int(c)
+		if node.getChild(aux) is None:
 			break
-		node = node.child[int(c)]
+		node = node.getChild(aux)
 		if node.nexthop is not None:
-			nexthop = node.nexthop
+			nexthop = node.getNexthop()
 
 	return nexthop
 
@@ -36,11 +32,11 @@ def InsertPrefix(tree, prefix, nexthop):
 	prefix = prefix.lstrip("e")
 	node = tree
 
-	for p in prefix:
-		aux = int(p)
-		if node.child[aux] is None:
+	for c in prefix:
+		aux = int(c)
+		if node.getChild(aux) is None:
 			node.addChild(aux, Node(node))
-		node = node.child[aux]
+		node = node.getChild(aux)
 
 	node.setNexthop(nexthop)
 	return tree
@@ -51,11 +47,12 @@ def DeletePrefix(tree, prefix):
 	prefix = prefix.lstrip("e")
 
 	for c in prefix:
-		if node.child[int(c)] is None: #caso o caminho não exista
+		aux = int(c)
+		if node.getChild(aux) is None: #caso o caminho não exista
 			return tree
-		node = node.child[int(c)]
+		node = node.getChild(aux)
 	
-	if node.nexthop is None:
+	if node.getNexthop() is None:
 		return tree #caso a entrada nao exista
 
 	node.deletePath()
@@ -64,27 +61,20 @@ def DeletePrefix(tree, prefix):
 
 def CompressTree(tree):
 	if tree is not None:
-		recursiveCompression(tree, None)
+		tree.recursiveCompression(None)
 	return tree
 
-def recursiveCompression(node, nexthop):
-	
-	# takes care of aggregation
-	if all(x is not None for x in node.child) and node.child[0].nexthop is node.child[1].nexthop:
-		node.nexthop = node.child[0].nexthop	
-
-	# takes care of filtering
-	if node.nexthop is nexthop:
-		node.deletePath()
-	elif node.nexthop is not None:
-		nexthop = node.nexthop
-
-	for i in range(2):
-		if node.child[i] is not None:
-			recursiveCompression(node.child[i], nexthop)
-
 def OptimalCompression(tree):
+	if tree is None:
+		return
+
+	if tree.getNexthop is None:
+		tree.setNexthop("drop")
+		
 	tree.recursiveORTC([tree.nexthop])
 	tree.nexthop = tree.nexthop[0]
 	tree.step3(tree.nexthop)
+
+	if tree.getNexthop() is "drop":
+		tree.setNexthop(None)
 	return tree

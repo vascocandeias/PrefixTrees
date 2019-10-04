@@ -1,12 +1,12 @@
 import sys
 from Node import Node
-from Tree import ImportTree, PrintTable, Lookup, InsertPrefix, DeletePrefix, CompressTree, OptimalCompression
+from Tree import PrefixTree, PrintTable, Lookup, InsertPrefix, DeletePrefix, CompressTree, OptimalCompression
 from IOFunctions import checkPrefix, read
 
 
-#tree=ImportTree(sys.argv[1])
 try:
-	tree = ImportTree("inputfile.txt")
+	tree=PrefixTree("inputfile.txt")
+	#tree=PrefixTree(sys.argv[1])
 except Exception as e:
 	print(e)
 	print("There was an error opening the file. Starting with a blank table...")
@@ -28,14 +28,14 @@ while(1):
 	
 	if val is 0:
 		print("Prefix Table")
-		PrintTable(tree, "")
+		PrintTable(tree)
 		
 	elif val is 1:
 		prefix = read("Prefix: ")
 		if not checkPrefix(prefix):
 			continue
 		nexthop = Lookup(tree,prefix)
-		if nexthop is not None:
+		if nexthop not in {None, "drop"}:
 			print("Next hop: " + nexthop)
 		else:
 			print("Packet dropped")
@@ -45,6 +45,9 @@ while(1):
 		if not checkPrefix(prefix):
 			continue
 		nexthop = read("Next hop: ")
+		if nexthop is "drop":
+			print("drop is not a valid next hop")
+			continue
 		tree = InsertPrefix(tree, prefix, nexthop)
 		
 	elif val is 3:
@@ -54,7 +57,7 @@ while(1):
 		tree = DeletePrefix(tree, prefix)
 		
 	elif val is 4:
-		CompressTree(tree)
+		tree = CompressTree(tree)
 		
 	elif val is 6:
 		tree.display()
