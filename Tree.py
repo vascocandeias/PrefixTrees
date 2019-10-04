@@ -10,8 +10,23 @@ def PrefixTree(filename):
 	return tree
 
 def PrintTable(tree):
-	while queue
-	tree.print("")
+	if tree is None:
+		return
+
+	queue = []
+	queue.append((tree, ""))
+	while queue:
+		node, path = queue.pop(0)
+		nexthop = node.getNexthop()
+		if nexthop is not None:
+			if path is "":
+				if nexthop is not "drop":
+					print("e " + nexthop)
+			else:
+				print(path + " " + nexthop)
+		for i in range(2):
+			if node.getChild(i) is not None:
+				queue.append((node.getChild(i), path+str(i)))
 	
 def Lookup(tree, prefix):
 	prefix = prefix.lstrip("e")

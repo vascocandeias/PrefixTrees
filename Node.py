@@ -39,17 +39,6 @@ class Node:
 		while node is not None and node.nexthop is None and all(x is None for x in node.child):
 			node = node.removeNode()
 
-	def print(self, path):
-		if self.nexthop is not None:
-			if path is "":
-				if self.nexthop is not "drop":
-					print("e " + self.nexthop)
-			else:
-				print(path + " " + self.nexthop)
-		for i in range(2):
-			if self.child[i] is not None:
-				self.child[i].print(path+str(i))
-
 	def recursiveCompression(self, nexthop):
 		# takes care of aggregation
 		if all(x is not None for x in self.child) and self.child[0].nexthop is self.child[1].nexthop:

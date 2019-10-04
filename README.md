@@ -15,3 +15,11 @@ http://cseweb.ucsd.edu/~varghese/PAPERS/TOCS99.pdf
 http://conferences.sigcomm.org/sigcomm/1997/papers/p182.pdf
 
 http://www.cs.cmu.edu/~dga/15-744/S07/papers/D+97.pdf
+
+
+ORTC
+
+melhorias implementadas:
+- fazer o passo 1 e 2 juntos
+- no passo 3 escolher o que já lá estava: ao concatenarmos sempre e escolhermos o primeiro, fazemos isso
+- não haver e: cria-se um nexthop dummy "drop" e no fim retira-se se tiver ficado no nó. se não tiver ficado, este é descartado
