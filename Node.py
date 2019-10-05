@@ -36,12 +36,12 @@ class Node:
 	def deletePath(self):
 		node = self
 		self.nexthop = None
-		while node is not None and node.nexthop is None and all(x is None for x in node.child):
-			node = node.removeNode()
+		if node is not None and all(x is None for x in node.child):
+			node.removeNode()
 
 	def recursiveCompression(self, nexthop):
 		# takes care of aggregation
-		if all(x is not None for x in self.child) and self.child[0].nexthop is self.child[1].nexthop:
+		if all(x is not None for x in self.child) and self.child[0].nexthop is self.child[1].nexthop and self.child[0].nexthop is not None:
 			self.nexthop = self.child[0].nexthop	
 
 		# takes care of filtering
@@ -53,6 +53,9 @@ class Node:
 		for i in range(2):
 			if self.child[i] is not None:
 				self.child[i].recursiveCompression(nexthop)
+
+		if self.nexthop is None and all(x is None for x in self.child):
+			self.removeNode()	
 
 	def recursiveORTC(self, nexthop):
 		if self.nexthop is None:
@@ -80,7 +83,7 @@ class Node:
 
 	def step3(self, nexthop):
 		if self.prev is not None and nexthop in self.nexthop:
-			self.deletePath()
+			self.nexthop = None
 		else:
 			self.nexthop = self.nexthop[0]
 			nexthop = self.nexthop
@@ -88,6 +91,10 @@ class Node:
 		for i in range(2):
 			if self.child[i] is not None:
 				self.child[i].step3(nexthop)
+
+		if self.nexthop is None and all(x is None for x in self.child):
+			self.removeNode()
+
 
 	def display(self):
 		lines, _, _, _ = self._display_aux()

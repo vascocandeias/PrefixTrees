@@ -28,7 +28,7 @@ def PrintTable(tree):
 			if node.getChild(i) is not None:
 				queue.append((node.getChild(i), path+str(i)))
 	
-def Lookup(tree, prefix):
+def LookUp(tree, prefix):
 	prefix = prefix.lstrip("e")
 	nexthop = tree.nexthop
 	node = tree

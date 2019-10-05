@@ -1,11 +1,10 @@
 import sys
 from Node import Node
-from Tree import PrefixTree, PrintTable, Lookup, InsertPrefix, DeletePrefix, CompressTree, OptimalCompression
+from Tree import PrefixTree, PrintTable, LookUp, InsertPrefix, DeletePrefix, CompressTree, OptimalCompression
 from IOFunctions import checkPrefix, read
 
-
 try:
-	tree=PrefixTree("inputfile.txt")
+	tree=PrefixTree("inputfile copy.txt")
 	#tree=PrefixTree(sys.argv[1])
 except Exception as e:
 	print(e)
@@ -34,7 +33,7 @@ while(1):
 		prefix = read("Prefix: ")
 		if not checkPrefix(prefix):
 			continue
-		nexthop = Lookup(tree,prefix)
+		nexthop = LookUp(tree,prefix)
 		if nexthop not in {None, "drop"}:
 			print("Next hop: " + nexthop)
 		else:
