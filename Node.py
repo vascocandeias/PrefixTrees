@@ -1,12 +1,11 @@
 class Node:
 	
-	def __init__(self, prev):
-		self.prev = prev
+	def __init__(self):
 		self.child = [None] * 2
 		self.nexthop = None
 
-	def addChild(self, num, child):
-		self.child[num] = child
+	def addChild(self, num):
+		self.child[num] = Node()
 
 	def getChild(self, num):
 		if num in {0,1}:
@@ -20,58 +19,71 @@ class Node:
 	def getNexthop(self):
 		return self.nexthop
 
-	def removeNode(self):
-		prev = self.prev
+	def deletePath(self, prefix):
 
-		if prev is None:
-			return None
-
-		if prev.child[0] is self:
-			prev.child[0] = None
+		if prefix is "":
+			self.nexthop = None
 		else:
-			prev.child[1] = None
+			bit = int(prefix[0])
+			rest = prefix[1:]
 
-		return prev
+			if self.child[bit] is None:
+				return False
+			elif self.child[bit].deletePath(rest):
+				print("here")
+				self.child[bit] = None
 
-	def deletePath(self):
-		node = self
-		self.nexthop = None
-		if node is not None and all(x is None for x in node.child):
-			node.removeNode()
+		if self.nexthop is None and all(x is None for x in self.child):
+			return True
+		else:
+			return False
+
 
 	def recursiveCompression(self, nexthop):
-		# takes care of aggregation
+		"""Compress the tree using only aggregation and filtering"""
+
+		# aggregation: if both children have the same nexthop, use it as the parent's nexthop 
 		if all(x is not None for x in self.child) and self.child[0].nexthop is self.child[1].nexthop and self.child[0].nexthop is not None:
 			self.nexthop = self.child[0].nexthop	
 
-		# takes care of filtering
+		# filtering: if this node's nexthop is redundant, remove it
 		if self.nexthop is nexthop:
-			self.deletePath()
+			self.nexthop = None
 		elif self.nexthop is not None:
 			nexthop = self.nexthop
 
+		# apply the algorithm to both children
 		for i in range(2):
 			if self.child[i] is not None:
-				self.child[i].recursiveCompression(nexthop)
+				if self.child[i].recursiveCompression(nexthop):
+					# if the child is an empty leaf, delete it
+					self.child[i] = None
 
+		# if this is an empty leaf, return true to be deleted
 		if self.nexthop is None and all(x is None for x in self.child):
-			self.removeNode()	
+			return True
 
-	def recursiveORTC(self, nexthop):
+		return False
+
+	def ORTCStep1(self, nexthop):
 		if self.nexthop is None:
 			self.nexthop = nexthop
 		else:
 			self.nexthop = [self.nexthop]
 
+		# if the node only has one child, create the other
 		for i in range(2):
 			if self.child[i] is None and self.child[not i] is not None:
-				self.child[i] = Node(self)
+				self.child[i] = Node()
+			# if the node is not a leaf, apply the algorithm to its children
 			if self.child[i] is not None:
-				self.child[i].recursiveORTC(self.nexthop)
+				self.child[i].ORTCStep1(self.nexthop)
 
+		# if the node is a leaf, do nothing
 		if self.child[0] is None:
 			return
 
+		# otherwise nexthop is the # of the childrens' nexthops
 		intersect = self.intersection()
 		if intersect:
 			self.nexthop = intersect
@@ -81,8 +93,8 @@ class Node:
 	def intersection(self): 
 		return list(set(self.child[0].nexthop) & set(self.child[1].nexthop)) 
 
-	def step3(self, nexthop):
-		if self.prev is not None and nexthop in self.nexthop:
+	def ORTCStep2(self, nexthop):
+		if nexthop in self.nexthop:
 			self.nexthop = None
 		else:
 			self.nexthop = self.nexthop[0]
@@ -90,11 +102,13 @@ class Node:
 
 		for i in range(2):
 			if self.child[i] is not None:
-				self.child[i].step3(nexthop)
+				if self.child[i].ORTCStep2(nexthop):
+					self.child[i] = None
 
 		if self.nexthop is None and all(x is None for x in self.child):
-			self.removeNode()
+			return True
 
+		return False
 
 	def display(self):
 		lines, _, _, _ = self._display_aux()

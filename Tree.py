@@ -3,7 +3,7 @@ from Node import Node
 def PrefixTree(filename):
 	f = open(filename)
 	lines = f.read().splitlines()
-	tree = Node(None)
+	tree = Node()
 	for x in lines:
 		InsertPrefix(tree, *x.split())
 	f.close()
@@ -50,27 +50,18 @@ def InsertPrefix(tree, prefix, nexthop):
 	for c in prefix:
 		aux = int(c)
 		if node.getChild(aux) is None:
-			node.addChild(aux, Node(node))
+			node.addChild(aux)
 		node = node.getChild(aux)
 
 	node.setNexthop(nexthop)
 	return tree
 
 def DeletePrefix(tree, prefix):
-	node = tree
+	if prefix is "e":
+		tree.setNexthop(None)
+		return tree
 
-	prefix = prefix.lstrip("e")
-
-	for c in prefix:
-		aux = int(c)
-		if node.getChild(aux) is None: #caso o caminho não exista
-			return tree
-		node = node.getChild(aux)
-	
-	if node.getNexthop() is None:
-		return tree #caso a entrada nao exista
-
-	node.deletePath()
+	tree.deletePath(prefix.lstrip("e"))
 
 	return tree
 
@@ -79,16 +70,15 @@ def CompressTree(tree):
 		tree.recursiveCompression(None)
 	return tree
 
-def OptimalCompression(tree):
+def OptimalCompress(tree):
 	if tree is None:
 		return
 
 	if tree.getNexthop is None:
 		tree.setNexthop("drop")
 		
-	tree.recursiveORTC([tree.nexthop])
-	tree.nexthop = tree.nexthop[0]
-	tree.step3(tree.nexthop)
+	tree.ORTCStep1([tree.nexthop])
+	tree.ORTCStep2(None)
 
 	if tree.getNexthop() is "drop":
 		tree.setNexthop(None)

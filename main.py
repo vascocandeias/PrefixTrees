@@ -1,6 +1,6 @@
 import sys
 from Node import Node
-from Tree import PrefixTree, PrintTable, LookUp, InsertPrefix, DeletePrefix, CompressTree, OptimalCompression
+from Tree import PrefixTree, PrintTable, LookUp, InsertPrefix, DeletePrefix, CompressTree, OptimalCompress
 from IOFunctions import checkPrefix, read
 
 try:
@@ -62,7 +62,7 @@ while(1):
 		tree.display()
 	
 	elif val is 5:
-		tree = OptimalCompression(tree)
+		tree = OptimalCompress(tree)
 
 	elif val is 7:
 		break
