@@ -1,4 +1,5 @@
 def read(command):
+	""" Gets the input value from the user"""
 	userInput = None
 	while userInput is None:
 		try:
@@ -13,6 +14,7 @@ def read(command):
 	return userInput
 
 def checkPrefix(prefix):
+	""" Validation of the prefix """
     if prefix is "e": return True
 
     try:

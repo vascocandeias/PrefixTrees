@@ -1,28 +1,35 @@
 class Node:
 	
 	def __init__(self):
+		""" Init function of the Node class as null values"""
 		self.child = [None] * 2
 		self.nexthop = None
 
 	def addChild(self, num):
+		""" Creation of a new node, child from the object that called the method"""
 		self.child[num] = Node()
 
 	def getChild(self, num):
+		""" Return the chosen child of the object"""
 		if num in {0,1}:
 			return self.child[num]
 		else:
 			return None
 
 	def setNexthop(self, nexthop):
+		""" Set the value of the interface for the next hop"""
 		self.nexthop = nexthop
 
 	def getNexthop(self):
+		""" Return the value of the interface for the next hop"""
 		return self.nexthop
 
 	def isLeaf(self):
+		""" Determines if the given object is a leaf of the tree, meaning that it doesn't have children"""
 		return all(x is None for x in self.child)
 
 	def hasTwoChildren(self):
+		""" Determines if the object has both children"""
 		return all(x is not None for x in self.child)
 
 	def deletePath(self, prefix):
@@ -116,7 +123,7 @@ class Node:
 			self.nexthop = self.nexthop[0]
 			nexthop = self.nexthop
 
-		# apply the algoritm to both children
+		# apply thw algoritm to both children
 		for i in range(2):
 			if self.child[i] is not None:
 				if self.child[i].ORTCStep2(nexthop):
@@ -130,10 +137,7 @@ class Node:
 		# otherwise, don't delete
 		return False
 
-	def display(self):
-		lines, _, _, _ = self._display_aux()
-		for line in lines:
-			print(line)
+
 
 	def _display_aux(self):
 		"""Returns list of strings, width, height, and horizontal coordinate of the root. REF: https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python"""
@@ -180,3 +184,8 @@ class Node:
 		zipped_lines = zip(left, right)
 		lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
 		return lines, n + m + u, max(p, q) + 2, n + u // 2
+
+	def display(self):
+		lines, _, _, _ = self._display_aux()
+		for line in lines:
+			print(line)
