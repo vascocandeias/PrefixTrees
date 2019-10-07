@@ -25,7 +25,7 @@ while(1):
 	val = read("\n> ")
 	print()
 
-	if val in {"4", "5"}:
+	if val in {"4", "5"} and backup is None:
 		try:
 			Backup(tree)
 			backup = PrefixTree("backup.txt")
