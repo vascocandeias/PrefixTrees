@@ -116,7 +116,7 @@ class Node:
 			self.nexthop = self.nexthop[0]
 			nexthop = self.nexthop
 
-		# apply thw algoritm to both children
+		# apply the algoritm to both children
 		for i in range(2):
 			if self.child[i] is not None:
 				if self.child[i].ORTCStep2(nexthop):
