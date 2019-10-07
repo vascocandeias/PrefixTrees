@@ -19,6 +19,12 @@ class Node:
 	def getNexthop(self):
 		return self.nexthop
 
+	def isLeaf(self):
+		return all(x is None for x in self.child)
+
+	def hasTwoChildren(self):
+		return all(x is not None for x in self.child)
+
 	def deletePath(self, prefix):
 		"""Recursive method to delete a prefix and the path from the root to that node"""
 
@@ -39,14 +45,10 @@ class Node:
 				self.child[bit] = None
 
 		# return whether the node is now a leaf. if it is, it should be deleted
-		return self.nexthop is None and all(x is None for x in self.child)
+		return self.nexthop is None and self.isLeaf()
 
 	def recursiveCompression(self, nexthop):
 		"""Compress the tree using only aggregation and filtering"""
-
-		# aggregation: if both children have the same nexthop, use it as the parent's nexthop 
-		if all(x is not None for x in self.child) and self.child[0].nexthop is self.child[1].nexthop and self.child[0].nexthop is not None:
-			self.nexthop = self.child[0].nexthop	
 
 		# filtering: if this node's nexthop is redundant, remove it
 		if self.nexthop is nexthop:
@@ -57,15 +59,18 @@ class Node:
 		# apply the algorithm to both children
 		for i in range(2):
 			if self.child[i] is not None:
-				if self.child[i].recursiveCompression(nexthop):
-					# if the child is an empty leaf, delete it
-					self.child[i] = None
+				self.child[i].recursiveCompression(nexthop)
 
-		# if this is an empty leaf, return true to be deleted
-		if self.nexthop is None and all(x is None for x in self.child):
-			return True
+		# aggregation: if both children have the same nexthop, use it as the parent's nexthop 
+		if self.hasTwoChildren() and self.child[0].nexthop is self.child[1].nexthop and self.child[0].nexthop is not None:
+			self.nexthop = self.child[0].nexthop
+			self.child[0].nexthop = None
+			self.child[1].nexthop = None
 
-		return False
+		for i in range(2):
+			if self.child[i] is not None and self.child[i].isLeaf() and self.child[i].nexthop is None:
+				# if the child is an empty leaf, delete it
+				self.child[i] = None
 
 	def ORTCStep1(self, nexthop):
 		"""Applies the first step of the ORTC algorithm"""

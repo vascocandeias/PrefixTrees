@@ -20,14 +20,36 @@ def PrintTable(tree):
 		nexthop = node.getNexthop()
 		if nexthop is not None:
 			if path is "":
-				if nexthop is not "drop":
-					print("e " + nexthop)
+				print("e " + nexthop)
 			else:
 				print(path + " " + nexthop)
+
 		for i in range(2):
 			if node.getChild(i) is not None:
 				queue.append((node.getChild(i), path+str(i)))
-	
+
+def Backup(tree):
+	if tree is None:
+		return
+
+	f = open("backup.txt", "w")
+
+	queue = []
+	queue.append((tree, ""))
+	while queue:
+		node, path = queue.pop(0)
+		nexthop = node.getNexthop()
+		if nexthop is not None:
+			if path is "":
+				if nexthop is not "drop":
+					f.write("e " + nexthop + "\n")
+			else:
+				f.write(path + " " + nexthop + "\n")
+		for i in range(2):
+			if node.getChild(i) is not None:
+				queue.append((node.getChild(i), path+str(i)))
+	f.close()
+
 def LookUp(tree, prefix):
 	prefix = prefix.lstrip("e")
 	nexthop = tree.nexthop
@@ -61,7 +83,7 @@ def DeletePrefix(tree, prefix):
 		tree.setNexthop(None)
 		return tree
 
-	tree.deletePath(prefix.lstrip("e"))
+	tree.deletePath(prefix)
 
 	return tree
 
@@ -74,7 +96,7 @@ def OptimalCompress(tree):
 	if tree is None:
 		return
 
-	if tree.getNexthop is None:
+	if tree.getNexthop() is None:
 		tree.setNexthop("drop")
 		
 	tree.ORTCStep1([tree.nexthop])
