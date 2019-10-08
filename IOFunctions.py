@@ -15,11 +15,12 @@ def read(command):
 
 def checkPrefix(prefix):
 	""" Validation of the prefix """
-    if prefix is "e": return True
+	if prefix is "e":
+		return True
 
-    try:
-        int(prefix, 2)
-    except ValueError :
-        print("This prefix is not valid")
-        return False
-    return True
+	try:
+		int(prefix, 2)
+	except ValueError:
+		print("This prefix is not valid")
+		return False
+	return True

@@ -102,6 +102,7 @@ def DeletePrefix(tree, prefix):
 	return tree
 
 def CompressTree(tree):
+	
 	if tree is not None:
 		tree.recursiveCompression(None)
 	return tree
