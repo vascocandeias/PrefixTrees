@@ -1,5 +1,5 @@
 def read(command):
-	""" Gets the input value from the user"""
+	"""Gets the input value from the user"""
 	userInput = None
 	while userInput is None:
 		try:
@@ -14,11 +14,12 @@ def read(command):
 	return userInput
 
 def checkPrefix(prefix):
-	""" Validation of the prefix """
+	"""Validation of the prefix """
 	if prefix is "e":
 		return True
 
 	try:
+		# check if the string is a binary number
 		int(prefix, 2)
 	except ValueError:
 		print("This prefix is not valid")

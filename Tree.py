@@ -1,7 +1,8 @@
 from Node import Node
+from collections import deque
  
 def PrefixTree(filename):
-	""" Opens the input file, reads it and creats the tree based on the information contained"""
+	"""Opens the input file, reads it and creates the tree based on the information contained"""
 	f = open(filename)
 	lines = f.read().splitlines()
 	tree = Node()
@@ -11,14 +12,15 @@ def PrefixTree(filename):
 	return tree
 
 def PrintTable(tree):
-	""" Using a Breadth First Search graph, print the table from the prefix tree"""
+	"""Using a Breadth First Search, print the table from the prefix tree"""
 	if tree is None:
 		return
 
-	queue = []
+	# create a FIFO queue
+	queue = deque()
 	queue.append((tree, ""))
 	while queue:
-		node, path = queue.pop(0)
+		node, path = queue.popleft()
 		nexthop = node.getNexthop()
 		if nexthop is not None:
 			if path is "":
@@ -31,16 +33,17 @@ def PrintTable(tree):
 				queue.append((node.getChild(i), path+str(i)))
 
 def Backup(tree):
-	""" Using a Breadth First Search graph, saves in a file the table from the prefix tree """
+	"""Using a Breadth First Search, saves the table from the prefix tree in a file"""
 	if tree is None:
 		return
 
 	f = open("backup.txt", "w")
 
-	queue = []
+	# create a FIFO queue
+	queue = deque()
 	queue.append((tree, ""))
 	while queue:
-		node, path = queue.pop(0)
+		node, path = queue.popleft()
 		nexthop = node.getNexthop()
 		if nexthop is not None:
 			if path is "":
@@ -54,7 +57,7 @@ def Backup(tree):
 	f.close()
 
 def LookUp(tree, prefix):
-	"""  By reading each bit from a given prefix, search in the prefix tree for the "next hop" value """
+	"""By reading each bit from a given prefix, search in the prefix tree for the next hop value """
 	prefix = prefix.lstrip("e")
 	nexthop = tree.nexthop
 	node = tree
@@ -62,7 +65,7 @@ def LookUp(tree, prefix):
 	# for each bit in the prefix
 	for c in prefix:
 		aux = int(c)
-		#finish the search if end of the tree is reached
+		# finish the search if end of the wanted node does not exist
 		if node.getChild(aux) is None:
 			break
 		#continue to the next child, if tree continues
@@ -73,14 +76,14 @@ def LookUp(tree, prefix):
 	return nexthop
 
 def InsertPrefix(tree, prefix, nexthop):
-	""" given a new entry on the routing table, add it to the prefix tree"""
+	"""Given a new entry on the routing table, add it to the prefix tree"""
 	prefix = prefix.lstrip("e")
 	node = tree
 
-	# for each bit in the prefix
+	# find the node to which the prefix refers to
 	for c in prefix:
 		aux = int(c)
-		#if the tree has no more children, creates it
+		#if the tree has no more children, create it
 		if node.getChild(aux) is None:
 			node.addChild(aux)
 		node = node.getChild(aux)
@@ -89,34 +92,38 @@ def InsertPrefix(tree, prefix, nexthop):
 	return tree
 
 def DeletePrefix(tree, prefix):
-	""" delete a given prefix from the prefix tree """
+	"""Delete a given prefix from the prefix tree """
 
-	#if the prefix is the tree's root
+	# if the prefix is the tree's root, just delete the nexthop
 	if prefix is "e":
 		tree.setNexthop(None)
 		return tree
 
-	#if not
 	tree.deletePath(prefix)
 
 	return tree
 
 def CompressTree(tree):
-	
+	"""Compress the tree using aggregation and filtering """	
 	if tree is not None:
 		tree.recursiveCompression(None)
 	return tree
 
 def OptimalCompress(tree):
+	"""Compress the tree using ORTC compression algorithm """
+
 	if tree is None:
 		return
 
+	# insert a dummy drop nextnode if the root does not have one
 	if tree.getNexthop() is None:
 		tree.setNexthop("drop")
 		
-	tree.ORTCStep1([tree.nexthop])
+	tree.ORTCStep1([tree.getNexthop()])
 	tree.ORTCStep2(None)
 
+	# remove the dummy next hop if it remained in the root
 	if tree.getNexthop() is "drop":
 		tree.setNexthop(None)
+		
 	return tree

@@ -1,35 +1,35 @@
 class Node:
 	
 	def __init__(self):
-		""" Init function of the Node class as null values"""
+		"""Init function of the Node object with null values"""
 		self.child = [None] * 2
 		self.nexthop = None
 
 	def addChild(self, num):
-		""" Creation of a new node, child from the object that called the method"""
+		"""Creation of a new node, child from the object that called the method"""
 		self.child[num] = Node()
 
 	def getChild(self, num):
-		""" Return the chosen child of the object"""
+		"""Return the chosen child of the object"""
 		if num in {0,1}:
 			return self.child[num]
 		else:
 			return None
 
 	def setNexthop(self, nexthop):
-		""" Set the value of the interface for the next hop"""
+		"""Set the value of the interface for the next hop"""
 		self.nexthop = nexthop
 
 	def getNexthop(self):
-		""" Return the value of the interface for the next hop"""
+		"""Return the value of the interface for the next hop"""
 		return self.nexthop
 
 	def isLeaf(self):
-		""" Determines if the given object is a leaf of the tree, meaning that it doesn't have children"""
+		"""Determines if the given object is a leaf of the tree, meaning that it doesn't have children"""
 		return all(x is None for x in self.child)
 
 	def hasTwoChildren(self):
-		""" Determines if the object has both children"""
+		"""Determines if the object has both children"""
 		return all(x is not None for x in self.child)
 
 	def deletePath(self, prefix):
@@ -51,7 +51,7 @@ class Node:
 				# if the deletition returns True, the child should be deleted
 				self.child[bit] = None
 
-		# return whether the node is now a leaf. if it is, it should be deleted
+		# return whether the node is now an empty leaf. if it is, it should be deleted
 		return self.nexthop is None and self.isLeaf()
 
 	def recursiveCompression(self, nexthop):

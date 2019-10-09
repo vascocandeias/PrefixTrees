@@ -2,13 +2,13 @@
 # Main function
 #
 # by: Sofia Estrela (84186)
-#	 Vasco Candeias
+#     Vasco Candeias (84196)
 #
 # 18 October 2019
 #
 ###############################
 
-# import from theother files of this project
+# import from the other files of this project
 import sys
 from Node import Node
 from Tree import PrefixTree, PrintTable, LookUp, InsertPrefix, DeletePrefix, CompressTree, OptimalCompress, Backup
@@ -31,14 +31,14 @@ while(1):
 	print("\t1) Table look up")
 	print("\t2) Insert entry")
 	print("\t3) Delete entry")
-	print("\t4) Compress table")
-	print("\t5) Compress ORTC")
+	print("\t4) Simple compression")
+	print("\t5) Optimal compression")
 	print("\t6) Print tree")
 	print("\t7) Quit")
 	val = read("\n> ")
 	print()
 
-	#in case of choosing one type of compression, create a backup tree
+	# in case of choosing one type of compression, create a backup tree
 	if val in {"4", "5"} and backup is None:
 		try:
 			Backup(tree)
@@ -83,9 +83,9 @@ while(1):
 		tree = InsertPrefix(tree, prefix, nexthop)
 		
 	
-	#when the client wants to delete a prefix rule
+	# when the client wants to delete a prefix rule
 	elif val is "3":
-		#gets and verifies the prefix from the user
+		# gets and verifies the prefix from the user
 		prefix = read("Prefix: ")
 		if not checkPrefix(prefix):
 			continue
