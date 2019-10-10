@@ -23,7 +23,7 @@ def PrintTable(tree):
 		node, path = queue.popleft()
 		nexthop = node.getNexthop()
 		if nexthop is not None:
-			if path is "":
+			if path == "":
 				print("e " + nexthop)
 			else:
 				print(path + " " + nexthop)
@@ -46,7 +46,7 @@ def Backup(tree):
 		node, path = queue.popleft()
 		nexthop = node.getNexthop()
 		if nexthop is not None:
-			if path is "":
+			if path == "":
 				if nexthop is not "drop":
 					f.write("e " + nexthop + "\n")
 			else:
@@ -95,7 +95,7 @@ def DeletePrefix(tree, prefix):
 	"""Delete a given prefix from the prefix tree """
 
 	# if the prefix is the tree's root, just delete the nexthop
-	if prefix is "e":
+	if prefix == "e":
 		tree.setNexthop(None)
 		return tree
 
@@ -123,7 +123,7 @@ def OptimalCompress(tree):
 	tree.ORTCStep2(None)
 
 	# remove the dummy next hop if it remained in the root
-	if tree.getNexthop() is "drop":
+	if tree.getNexthop() == "drop":
 		tree.setNexthop(None)
 		
 	return tree

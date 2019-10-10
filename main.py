@@ -47,12 +47,12 @@ while(1):
 			print("There was an error backing up the table")
 	
 	# when the user wants to print a table
-	if val is "0":
+	if val == "0":
 		print("Prefix Table")
 		PrintTable(tree)
 		
 	# when the user wants to look up an IP/prefix
-	elif val is "1":
+	elif val == "1":
 		# IP input reading and check if valid
 		ip = read("IP: ")
 		if not checkPrefix(ip):
@@ -65,14 +65,14 @@ while(1):
 			print("Packet dropped")
 	
 	# in case the user wants to input a new prefix rule		
-	elif val is "2":
+	elif val == "2":
 		# get the value from user and validate it
 		prefix = read("Prefix: ")
 		if not checkPrefix(prefix):
 			continue
 		# get the next hop value and validate it
 		nexthop = read("Next hop: ")
-		if nexthop is "drop":
+		if nexthop == "drop":
 			print("drop is not a valid next hop")
 			continue
 		# get the tree from the backup in case it was compressed before
@@ -84,7 +84,7 @@ while(1):
 		
 	
 	# when the client wants to delete a prefix rule
-	elif val is "3":
+	elif val == "3":
 		# gets and verifies the prefix from the user
 		prefix = read("Prefix: ")
 		if not checkPrefix(prefix):
@@ -97,19 +97,19 @@ while(1):
 		tree = DeletePrefix(tree, prefix)
 	
 	# when the user wants to compress the tree (filter and agregation)
-	elif val is "4":
+	elif val == "4":
 		tree = CompressTree(tree)
 	
 	# when the user wants to compress the tree (ortc method)	
-	elif val is "5":
+	elif val == "5":
 		tree = OptimalCompress(tree)
 
 	# if the user wants to print the tree in the screen
-	elif val is "6":
+	elif val == "6":
 		tree.display()
 
 	# when the user wants to exit the program
-	elif val is "7":
+	elif val == "7":
 		break
 
 	# in the option is not valid
