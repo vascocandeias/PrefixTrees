@@ -1,12 +1,17 @@
 from Node import Node
 from collections import deque
+from IOFunctions import checkPrefix
  
 def PrefixTree(filename):
 	"""Opens the input file, reads it and creates the tree based on the information contained"""
+
 	f = open(filename)
 	lines = f.read().splitlines()
 	tree = Node()
 	for x in lines:
+		if not checkPrefix(x.split()[0]):
+			f.close()
+			raise Exception
 		InsertPrefix(tree, *x.split())
 	f.close()
 	return tree
@@ -30,10 +35,11 @@ def PrintTable(tree):
 
 		for i in range(2):
 			if node.getChild(i) is not None:
-				queue.append((node.getChild(i), path+str(i)))
+				queue.append((node.getChild(i), path + str(i)))
 
 def Backup(tree):
 	"""Using a Breadth First Search, saves the table from the prefix tree in a file"""
+
 	if tree is None:
 		return
 
@@ -53,11 +59,12 @@ def Backup(tree):
 				f.write(path + " " + nexthop + "\n")
 		for i in range(2):
 			if node.getChild(i) is not None:
-				queue.append((node.getChild(i), path+str(i)))
+				queue.append((node.getChild(i), path + str(i)))
 	f.close()
 
 def LookUp(tree, prefix):
 	"""By reading each bit from a given prefix, search in the prefix tree for the next hop value """
+
 	prefix = prefix.lstrip("e")
 	nexthop = tree.nexthop
 	node = tree
@@ -77,6 +84,7 @@ def LookUp(tree, prefix):
 
 def InsertPrefix(tree, prefix, nexthop):
 	"""Given a new entry on the routing table, add it to the prefix tree"""
+
 	prefix = prefix.lstrip("e")
 	node = tree
 
@@ -105,6 +113,7 @@ def DeletePrefix(tree, prefix):
 
 def CompressTree(tree):
 	"""Compress the tree using aggregation and filtering """	
+
 	if tree is not None:
 		tree.recursiveCompression(None)
 	return tree

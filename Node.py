@@ -33,7 +33,7 @@ class Node:
 		return all(x is not None for x in self.child)
 
 	def deletePath(self, prefix):
-		"""Recursive method to delete a prefix and the path from the root to that node"""
+		"""Recursive method to delete a prefix and the empty path from the root to that node"""
 
 		# if this is the node to delete, set its nexthop to None to clear the entry
 		if prefix is "":
@@ -138,6 +138,13 @@ class Node:
 		return False
 
 
+	def deleteSubtree(self):
+		"""Deletes the tree below a certain node using a DFS"""
+
+		for i in range(2):
+			if self.child[i] is not None:
+				self.child[i].deleteSubtree()
+				self.child[i] = None
 
 	def _display_aux(self):
 		"""Returns list of strings, width, height, and horizontal coordinate of the root. REF: https://stackoverflow.com/questions/34012886/print-binary-tree-level-by-level-in-python"""

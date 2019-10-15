@@ -12,12 +12,12 @@
 import sys
 from Node import Node
 from Tree import PrefixTree, PrintTable, LookUp, InsertPrefix, DeletePrefix, CompressTree, OptimalCompress, Backup
-from IOFunctions import checkPrefix, read
+from IOFunctions import checkPrefix, read, checkIP
 
-# verifies if there is an input file in the arguments
+# import the prefix table into a tree
 try:
 	tree = PrefixTree(sys.argv[1])
-except Exception as e:
+except:
 	print("There was an error opening the file. Starting with a blank table...")
 	tree = Node()
 
@@ -51,11 +51,11 @@ while(1):
 		print("Prefix Table")
 		PrintTable(tree)
 		
-	# when the user wants to look up an IP/prefix
+	# when the user wants to look up an IP
 	elif val == "1":
 		# IP input reading and check if valid
 		ip = read("IP: ")
-		if not checkPrefix(ip):
+		if not checkIP(ip):
 			continue
 		# look up the ip to get the next hop
 		nexthop = LookUp(tree, ip)
@@ -115,3 +115,9 @@ while(1):
 	# in the option is not valid
 	else:
 		print("Try again")
+
+
+if tree is not None:
+	tree.deleteSubtree()
+if backup is not None:
+	backup.deleteSubtree()
