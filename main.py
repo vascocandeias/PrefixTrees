@@ -13,6 +13,7 @@ import sys
 from Node import Node
 from Tree import PrefixTree, PrintTable, LookUp, InsertPrefix, DeletePrefix, CompressTree, OptimalCompress, Backup
 from IOFunctions import checkPrefix, read, checkIP
+import os # to delete the backup file in the end
 
 # import the prefix table into a tree
 try:
@@ -121,3 +122,6 @@ if tree is not None:
 	tree.deleteSubtree()
 if backup is not None:
 	backup.deleteSubtree()
+
+if os.path.exists("backup.txt"):
+	os.remove("backup.txt")	
