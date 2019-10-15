@@ -65,7 +65,6 @@ def Backup(tree):
 def LookUp(tree, prefix):
 	"""By reading each bit from a given prefix, search in the prefix tree for the next hop value """
 
-	prefix = prefix.lstrip("e")
 	nexthop = tree.nexthop
 	node = tree
 
