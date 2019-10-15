@@ -58,7 +58,7 @@ class Node:
 		"""Compress the tree using only aggregation and filtering"""
 
 		# filtering: if this node's nexthop is redundant, remove it
-		if self.nexthop is nexthop:
+		if self.nexthop == nexthop:
 			self.nexthop = None
 		elif self.nexthop is not None:
 			nexthop = self.nexthop
@@ -69,7 +69,7 @@ class Node:
 				self.child[i].recursiveCompression(nexthop)
 
 		# aggregation: if both children have the same nexthop, use it as the parent's nexthop 
-		if self.hasTwoChildren() and self.child[0].nexthop is self.child[1].nexthop and self.child[0].nexthop is not None:
+		if self.hasTwoChildren() and self.child[0].nexthop == self.child[1].nexthop and self.child[0].nexthop is not None:
 			self.nexthop = self.child[0].nexthop
 			self.child[0].nexthop = None
 			self.child[1].nexthop = None
